@@ -66,7 +66,6 @@ public final class UptimeClient {
 
     static void connect(Bootstrap b) {
         b.connect().addListener(new ChannelFutureListener() {
-            @Override
             public void operationComplete(ChannelFuture future) throws Exception {
                 if (future.cause() != null) {
                     handler.startTime = -1;
