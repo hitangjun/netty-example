@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>WebSocket Client Example</title>
+    </head>
+    <body >
+        <h1>Repsonse from Server</h1>
+        <form onsubmit="return false;">
+            <input type="text" name="message" value="Netty 最佳实践"/>
+            <br><br>
+            <input type="button" value="发送 WebSocket 请求消息" onclick="send(this.form.message.value)"/>
+            <hr color="blue"/>
+            <h3>服务端返回的应答消息</h3>
+            <textarea id="responseText" style="width: 500px;height: 300px;"></textarea>
+        </form>
+        <script>
+            var socket;
+            if(!window.WebSocket)
+            {
+                window.WebSocket = window.MozWebSocket;
+            }
+
+            if(window.WebSocket){
+                socket = new WebSocket("ws://127.0.0.1:8080/websocket");
+                socket.onmessage = function (event) {
+                    var ta = document.getElementById('responseText');
+//                    ta.value='';
+                    ta.value += event.data;
+                };
+                socket.onopen = function (event) {
+                    var ta = document.getElementById('responseText');
+                    ta.value = "打开WebSocket服务正常，浏览器支持WebSocket!";
+                };
+                socket.onclose = function(event){
+                    var ta = document.getElementById('responseText');
+                    ta.value='';
+                    ta.value = "WebSocket 关闭！";
+                }
+            }else{
+                alert("抱歉，您的浏览器不支持WebSocket协议！");
+            }
+
+
+            function send(message) {
+                if(!window.WebSocket){return ;}
+                console.log(socket.readyState)
+                if(socket.readyState == WebSocket.OPEN) {
+                    socket.send(message);
+                }else{
+                    alert("Websocket 连接失败！");
+                }
+            }
+        </script>
+    </body>
+</html>
